@@ -1,0 +1,7 @@
+{
+  "name": "Cinematic Motion Showcase",
+  "description": "A high-end animation portfolio showcasing GSAP, Three.js, and immersive scroll experiences inspired by award-winning web design.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
