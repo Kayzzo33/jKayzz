@@ -1,7 +1,6 @@
-
 import React, { useRef, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, Sphere, MeshDistortMaterial, PerspectiveCamera } from '@react-three/drei';
+import { Float, Sphere, MeshDistortMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
 const AnimatedShape = () => {
@@ -9,11 +8,9 @@ const AnimatedShape = () => {
   
   useFrame((state) => {
     if (meshRef.current) {
-      // Rotation logic
       meshRef.current.rotation.x = state.clock.getElapsedTime() * 0.15;
       meshRef.current.rotation.y = state.clock.getElapsedTime() * 0.25;
       
-      // Gentle mouse tracking
       const targetX = (state.mouse.x * Math.PI) / 12;
       const targetY = (state.mouse.y * Math.PI) / 12;
       
@@ -42,7 +39,7 @@ const ThreeDSection: React.FC = () => {
   return (
     <section className="h-screen bg-[#0a0a0a] relative flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <Suspense fallback={null}>
+        <Suspense fallback={<div className="w-full h-full bg-[#0a0a0a]" />}>
           <Canvas 
             dpr={[1, 2]} 
             camera={{ position: [0, 0, 5], fov: 45 }}
@@ -51,6 +48,10 @@ const ThreeDSection: React.FC = () => {
               alpha: true,
               powerPreference: "high-performance" 
             }}
+            onCreated={({ gl }) => {
+              gl.setClearColor(new THREE.Color('#0a0a0a'), 0);
+            }}
+            onError={(e) => console.error("Three.js Canvas Error:", e)}
           >
             <ambientLight intensity={0.6} />
             <pointLight position={[10, 10, 10]} intensity={1.5} color="#00f5ff" />

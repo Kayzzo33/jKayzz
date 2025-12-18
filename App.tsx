@@ -11,7 +11,7 @@ import { gsap, ScrollTrigger } from './utils/gsap';
 
 const App: React.FC = () => {
   useEffect(() => {
-    // Force immediate scroll restoration
+    // Scroll settings for performance
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
@@ -20,7 +20,7 @@ const App: React.FC = () => {
       nullTargetWarn: false,
     });
 
-    // Small delay to ensure all DOM elements are rendered before GSAP scans for them
+    // Strategy delay for ScrollTrigger refresh
     const refreshTimeout = setTimeout(() => {
       ScrollTrigger.refresh();
     }, 500);
@@ -41,13 +41,15 @@ const App: React.FC = () => {
         <span className="text-white text-[10px] font-black tracking-[0.3em] uppercase opacity-40">Volume 01</span>
       </nav>
 
-      <OpeningSection />
-      <TextZoomSection />
-      <HorizontalShowcase />
-      <MacbookShowcase />
-      <DigitalEcosystem />
-      <StackedCards />
-      <Footer />
+      <main>
+        <OpeningSection />
+        <TextZoomSection />
+        <HorizontalShowcase />
+        <MacbookShowcase />
+        <DigitalEcosystem />
+        <StackedCards />
+        <Footer />
+      </main>
     </div>
   );
 };
