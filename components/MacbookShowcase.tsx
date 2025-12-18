@@ -30,7 +30,7 @@ export const MacbookShowcase = () => {
     <div className="w-full overflow-hidden bg-[#0a0a0a]">
       <MacbookScroll
         title={
-          <span className="text-white">
+          <span className="text-neutral-200">
             Unmatched Performance. <br /> Built for the future.
           </span>
         }
@@ -60,36 +60,29 @@ export const MacbookScroll = ({
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start start", "end start"],
+    offset: ["start end", "end start"],
   });
 
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (window && window.innerWidth < 768) {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
       setIsMobile(true);
     }
   }, []);
 
-  const scaleX = useTransform(
-    scrollYProgress,
-    [0, 0.3],
-    [1.2, isMobile ? 1 : 1.5],
-  );
-  const scaleY = useTransform(
-    scrollYProgress,
-    [0, 0.3],
-    [0.6, isMobile ? 1 : 1.5],
-  );
-  const translate = useTransform(scrollYProgress, [0, 1], [0, 1500]);
-  const rotate = useTransform(scrollYProgress, [0.1, 0.12, 0.3], [-28, -28, 0]);
-  const textTransform = useTransform(scrollYProgress, [0, 0.3], [0, 100]);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  // Lid scale and rotation transforms based on scroll
+  const scaleX = useTransform(scrollYProgress, [0, 0.4], [1.2, isMobile ? 1 : 1.5]);
+  const scaleY = useTransform(scrollYProgress, [0, 0.4], [0.6, isMobile ? 1 : 1.5]);
+  const translate = useTransform(scrollYProgress, [0.3, 1], [0, 1500]);
+  const rotate = useTransform(scrollYProgress, [0.1, 0.15, 0.4], [-28, -28, 0]);
+  const textTransform = useTransform(scrollYProgress, [0, 0.4], [0, 100]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   return (
     <div
       ref={ref}
-      className="flex min-h-[200vh] shrink-0 scale-[0.35] transform flex-col items-center justify-start py-0 [perspective:800px] sm:scale-50 md:scale-100 md:py-80"
+      className="flex min-h-[180vh] shrink-0 scale-[0.35] transform flex-col items-center justify-start py-0 [perspective:1000px] sm:scale-50 md:scale-100 md:py-80"
     >
       <motion.h2
         style={{
@@ -154,10 +147,10 @@ export const Lid = ({
   src?: string;
 }) => {
   return (
-    <div className="relative [perspective:800px]">
+    <div className="relative [perspective:1000px]">
       <div
         style={{
-          transform: "perspective(800px) rotateX(-25deg) translateZ(0px)",
+          transform: "perspective(1000px) rotateX(-25deg) translateZ(0px)",
           transformOrigin: "bottom",
           transformStyle: "preserve-3d",
         }}
@@ -183,7 +176,7 @@ export const Lid = ({
           transformStyle: "preserve-3d",
           transformOrigin: "top",
         }}
-        className="absolute inset-0 h-96 w-[32rem] rounded-2xl bg-[#010101] p-2"
+        className="absolute inset-0 h-96 w-[32rem] rounded-2xl bg-[#010101] p-2 z-20"
       >
         <div className="absolute inset-0 rounded-lg bg-[#272729]" />
         <img
@@ -232,7 +225,6 @@ export const Keypad = () => {
         </KBtn>
       </div>
 
-      {/* Second row */}
       <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
         <KBtn><span className="block">~</span><span className="mt-1 block">`</span></KBtn>
         <KBtn><span className="block">!</span><span className="block">1</span></KBtn>
@@ -250,7 +242,6 @@ export const Keypad = () => {
         <KBtn className="w-10 items-end justify-end pr-[4px] pb-[2px]" childrenClassName="items-end">delete</KBtn>
       </div>
 
-      {/* Third row */}
       <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
         <KBtn className="w-10 items-end justify-start pb-[2px] pl-[4px]" childrenClassName="items-start">tab</KBtn>
         <KBtn><span className="block">Q</span></KBtn>
@@ -268,7 +259,6 @@ export const Keypad = () => {
         <KBtn><span className="block">{`|`}</span><span className="block">{`\\`}</span></KBtn>
       </div>
 
-      {/* Fourth Row */}
       <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
         <KBtn className="w-[2.8rem] items-end justify-start pb-[2px] pl-[4px]" childrenClassName="items-start">caps lock</KBtn>
         <KBtn><span className="block">A</span></KBtn>
@@ -285,7 +275,6 @@ export const Keypad = () => {
         <KBtn className="w-[2.85rem] items-end justify-end pr-[4px] pb-[2px]" childrenClassName="items-end">return</KBtn>
       </div>
 
-      {/* Fifth Row */}
       <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
         <KBtn className="w-[3.65rem] items-end justify-start pb-[2px] pl-[4px]" childrenClassName="items-start">shift</KBtn>
         <KBtn><span className="block">Z</span></KBtn>
@@ -301,7 +290,6 @@ export const Keypad = () => {
         <KBtn className="w-[3.65rem] items-end justify-end pr-[4px] pb-[2px]" childrenClassName="items-end">shift</KBtn>
       </div>
 
-      {/* sixth Row */}
       <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
         <KBtn childrenClassName="h-full justify-between py-[4px]"><div className="flex w-full justify-end pr-1"><span>fn</span></div><div className="flex w-full justify-start pl-1"><IconWorld className="h-[6px] w-[6px]" /></div></KBtn>
         <KBtn childrenClassName="h-full justify-between py-[4px]"><div className="flex w-full justify-end pr-1"><IconChevronUp className="h-[6px] w-[6px]" /></div><div className="flex w-full justify-start pl-1"><span>control</span></div></KBtn>

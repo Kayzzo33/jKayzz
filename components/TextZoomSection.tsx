@@ -16,7 +16,7 @@ const TextZoomSection: React.FC = () => {
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=400%', // Increased for more animation steps
+          end: '+=400%',
           scrub: 1,
           pin: true,
         }
@@ -54,12 +54,12 @@ const TextZoomSection: React.FC = () => {
         duration: 4,
         ease: 'power4.in'
       }, '+=0.5')
-      // 6. Transition Background Color as we "pass through"
+      // 6. Transition Background
       .to(bgRef.current, {
-        backgroundColor: '#0a0a0a', // Kept black but ensured content over it is visible
+        backgroundColor: '#0a0a0a',
         duration: 1,
       }, '-=1.5')
-      // 7. Reveal final content
+      // 7. Reveal final content with high visibility
       .to('.zoom-reveal', {
         opacity: 1,
         y: 0,
@@ -68,7 +68,6 @@ const TextZoomSection: React.FC = () => {
         ease: 'power3.out'
       }, '-=0.5');
 
-      // Subtle parallax for stars based on mouse
       const handleMouseMove = (e: MouseEvent) => {
         const x = (e.clientX / window.innerWidth - 0.5) * 50;
         const y = (e.clientY / window.innerHeight - 0.5) * 50;
@@ -87,7 +86,6 @@ const TextZoomSection: React.FC = () => {
         ref={bgRef}
         className="h-screen w-full flex items-center justify-center bg-[#0a0a0a] transition-colors duration-1000 relative"
       >
-        {/* Starry Background (Static until passing through) */}
         <div 
           ref={starsRef}
           className="absolute inset-0 z-0 pointer-events-none opacity-0"
@@ -98,7 +96,6 @@ const TextZoomSection: React.FC = () => {
           }}
         />
 
-        {/* Cinematic Preceding Phrases */}
         <div 
           ref={phrase1Ref}
           className="absolute top-[20%] left-[10%] z-10 text-white mix-blend-difference opacity-0"
@@ -119,7 +116,6 @@ const TextZoomSection: React.FC = () => {
           </h4>
         </div>
 
-        {/* Main Traversal Text */}
         <h2 
           ref={zoomTextRef}
           className="text-7xl md:text-[15rem] font-black pointer-events-none mix-blend-difference text-white z-20 scale-50 opacity-0"
@@ -127,19 +123,18 @@ const TextZoomSection: React.FC = () => {
           BEYOND
         </h2>
 
-        {/* Final revealed content */}
         <div className="zoom-reveal absolute inset-0 flex flex-col items-center justify-center opacity-0 translate-y-20 pointer-events-none z-30">
           <div className="w-24 h-1 bg-[#ff006e] mb-12" />
-          <h3 className="text-4xl md:text-8xl font-black text-white uppercase mb-8 tracking-tighter italic">
+          <h3 className="text-4xl md:text-8xl font-black text-white opacity-100 uppercase mb-8 tracking-tighter italic drop-shadow-lg">
             DEEP EXPERIENCE
           </h3>
-          <p className="text-lg md:text-2xl text-gray-400 max-w-2xl text-center px-6 font-medium leading-relaxed">
+          <p className="text-lg md:text-2xl text-gray-300 max-w-2xl text-center px-6 font-medium leading-relaxed drop-shadow-md">
             We don't just animate; we engineer sensation. 
             Blurring the lines between the interface and the user.
           </p>
           <div className="mt-12 flex space-x-4">
              <div className="w-3 h-3 rounded-full bg-[#ff006e] animate-ping" />
-             <span className="text-[10px] font-black tracking-[0.4em] text-gray-400 uppercase">Interactive Layer 01</span>
+             <span className="text-[10px] font-black tracking-[0.4em] text-gray-100 uppercase">Interactive Layer 01</span>
           </div>
         </div>
       </section>
