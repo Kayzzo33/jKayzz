@@ -56,7 +56,7 @@ const TextZoomSection: React.FC = () => {
       }, '+=0.5')
       // 6. Transition Background Color as we "pass through"
       .to(bgRef.current, {
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#0a0a0a', // Kept black but ensured content over it is visible
         duration: 1,
       }, '-=1.5')
       // 7. Reveal final content
@@ -130,10 +130,10 @@ const TextZoomSection: React.FC = () => {
         {/* Final revealed content */}
         <div className="zoom-reveal absolute inset-0 flex flex-col items-center justify-center opacity-0 translate-y-20 pointer-events-none z-30">
           <div className="w-24 h-1 bg-[#ff006e] mb-12" />
-          <h3 className="text-4xl md:text-8xl font-black text-[#0a0a0a] uppercase mb-8 tracking-tighter italic">
+          <h3 className="text-4xl md:text-8xl font-black text-white uppercase mb-8 tracking-tighter italic">
             DEEP EXPERIENCE
           </h3>
-          <p className="text-lg md:text-2xl text-gray-500 max-w-2xl text-center px-6 font-medium leading-relaxed">
+          <p className="text-lg md:text-2xl text-gray-400 max-w-2xl text-center px-6 font-medium leading-relaxed">
             We don't just animate; we engineer sensation. 
             Blurring the lines between the interface and the user.
           </p>
