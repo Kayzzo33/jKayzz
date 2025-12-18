@@ -3,6 +3,12 @@ import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 
 const cn = (...classes: (string | undefined | boolean)[]) => classes.filter(Boolean).join(" ");
 
+interface MacbookScrollProps {
+  src?: string;
+  showGradient?: boolean;
+  title?: string;
+}
+
 export const MacbookShowcase = () => {
   return (
     <section className="w-full bg-[#0a0a0a] overflow-hidden">
@@ -14,14 +20,10 @@ export const MacbookShowcase = () => {
   );
 };
 
-export const MacbookScroll = ({
+export const MacbookScroll: React.FC<MacbookScrollProps> = ({
   src,
   showGradient = true,
   title,
-}: {
-  src?: string;
-  showGradient?: boolean;
-  title?: string;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -32,7 +34,10 @@ export const MacbookScroll = ({
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const scaleX = useTransform(scrollYProgress, [0.1, 0.4], [1.2, isMobile ? 1 : 1.5]);
@@ -137,7 +142,6 @@ export const Trackpad = () => (
   <div className="mx-auto my-2 h-32 w-[45%] rounded-2xl bg-black/20 ring-1 ring-white/5 shadow-inner" />
 );
 
-// Explicitly using React.FC to allow for standard React attributes like 'key'.
 export const KBtn: React.FC<{ className?: string }> = ({ className }) => (
   <div className={cn("h-5 w-5 rounded-[4px] bg-[#0A090D] ring-1 ring-white/10 shadow-sm", className)} />
 );

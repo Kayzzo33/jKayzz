@@ -1,6 +1,4 @@
-
-import React, { useLayoutEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect } from 'react';
 import CustomCursor from './components/CustomCursor';
 import OpeningSection from './components/OpeningSection';
 import TextZoomSection from './components/TextZoomSection';
@@ -12,18 +10,20 @@ import Footer from './components/Footer';
 import { gsap, ScrollTrigger } from './utils/gsap';
 
 const App: React.FC = () => {
-  useLayoutEffect(() => {
+  useEffect(() => {
+    // Force immediate scroll restoration
     if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'auto';
+      history.scrollRestoration = 'manual';
     }
 
     gsap.config({
       nullTargetWarn: false,
     });
 
+    // Small delay to ensure all DOM elements are rendered before GSAP scans for them
     const refreshTimeout = setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 800);
+    }, 500);
 
     return () => {
       clearTimeout(refreshTimeout);
@@ -35,7 +35,6 @@ const App: React.FC = () => {
     <div className="app-container bg-[#0a0a0a] selection:bg-[#ff006e] selection:text-white">
       <CustomCursor />
       
-      {/* Fixed Header Label */}
       <nav className="fixed top-10 left-1/2 -translate-x-1/2 flex items-center space-x-8 z-[100] mix-blend-difference pointer-events-none">
         <span className="text-white text-[10px] font-black tracking-[0.3em] uppercase opacity-40">Interactive Portfolio</span>
         <div className="w-12 h-[1px] bg-white opacity-20" />
@@ -43,17 +42,11 @@ const App: React.FC = () => {
       </nav>
 
       <OpeningSection />
-      
       <TextZoomSection />
-      
       <HorizontalShowcase />
-      
       <MacbookShowcase />
-      
       <DigitalEcosystem />
-      
       <StackedCards />
-      
       <Footer />
     </div>
   );
