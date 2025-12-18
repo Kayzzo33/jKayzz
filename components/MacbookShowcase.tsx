@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
-import { MotionValue, motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import {
   IconBrightnessDown,
   IconBrightnessUp,
@@ -27,28 +27,27 @@ const cn = (...classes: (string | undefined | boolean)[]) => classes.filter(Bool
 
 export const MacbookShowcase = () => {
   return (
-    <div className="w-full overflow-hidden bg-[#0a0a0a]">
+    <section className="w-full bg-[#0a0a0a] overflow-hidden">
       <MacbookScroll
         title={
-          <span className="text-neutral-200">
-            Unmatched Performance. <br /> Built for the future.
+          <span className="text-white">
+            Unmatched Performance. <br /> Engineered for Sensation.
           </span>
         }
         badge={
-          <div className="flex items-center space-x-2">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-[#ff006e] to-[#00f5ff]" />
+          <div className="flex items-center justify-center h-12 w-12 rounded-full bg-gradient-to-br from-[#ff006e] to-[#00f5ff] shadow-lg shadow-[#ff006e]/20">
+            <div className="h-4 w-4 rounded-full bg-white animate-pulse" />
           </div>
         }
         src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop"
-        showGradient={false}
       />
-    </div>
+    </section>
   );
 };
 
 export const MacbookScroll = ({
   src,
-  showGradient,
+  showGradient = true,
   title,
   badge,
 }: {
@@ -66,68 +65,66 @@ export const MacbookScroll = ({
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.innerWidth < 768) {
-      setIsMobile(true);
+    if (typeof window !== "undefined") {
+      setIsMobile(window.innerWidth < 768);
     }
   }, []);
 
-  // Lid scale and rotation transforms based on scroll
-  const scaleX = useTransform(scrollYProgress, [0, 0.4], [1.2, isMobile ? 1 : 1.5]);
-  const scaleY = useTransform(scrollYProgress, [0, 0.4], [0.6, isMobile ? 1 : 1.5]);
-  const translate = useTransform(scrollYProgress, [0.3, 1], [0, 1500]);
-  const rotate = useTransform(scrollYProgress, [0.1, 0.15, 0.4], [-28, -28, 0]);
-  const textTransform = useTransform(scrollYProgress, [0, 0.4], [0, 100]);
+  const scaleX = useTransform(scrollYProgress, [0.1, 0.4], [1.2, isMobile ? 1 : 1.5]);
+  const scaleY = useTransform(scrollYProgress, [0.1, 0.4], [0.6, isMobile ? 1 : 1.5]);
+  const translate = useTransform(scrollYProgress, [0.4, 0.8], [0, 800]);
+  const rotate = useTransform(scrollYProgress, [0.1, 0.4], [-90, 0]);
+  const textTransform = useTransform(scrollYProgress, [0, 0.3], [0, 100]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   return (
     <div
       ref={ref}
-      className="flex min-h-[180vh] shrink-0 scale-[0.35] transform flex-col items-center justify-start py-0 [perspective:1000px] sm:scale-50 md:scale-100 md:py-80"
+      className="flex min-h-[160vh] flex-col items-center justify-start py-40 md:py-80 [perspective:1200px]"
     >
       <motion.h2
         style={{
           translateY: textTransform,
           opacity: textOpacity,
         }}
-        className="mb-20 text-center text-3xl font-bold text-neutral-200"
+        className="mb-32 text-center text-4xl md:text-6xl font-black text-white tracking-tighter"
       >
-        {title || (
-          <span>
-            This Macbook is built with Tailwindcss. <br /> No kidding.
-          </span>
-        )}
+        {title}
       </motion.h2>
-      {/* Lid */}
-      <Lid
-        src={src}
-        scaleX={scaleX}
-        scaleY={scaleY}
-        rotate={rotate}
-        translate={translate}
-      />
-      {/* Base area */}
-      <div className="relative -z-10 h-[22rem] w-[32rem] overflow-hidden rounded-2xl bg-[#272729]">
-        {/* above keyboard bar */}
-        <div className="relative h-10 w-full">
-          <div className="absolute inset-x-0 mx-auto h-4 w-[80%] bg-[#050505]" />
+
+      <div className="relative scale-50 sm:scale-75 md:scale-100 lg:scale-110 xl:scale-125 transition-transform duration-500">
+        <Lid
+          src={src}
+          scaleX={scaleX}
+          scaleY={scaleY}
+          rotate={rotate}
+          translate={translate}
+        />
+        
+        <div className="relative -z-10 h-[22rem] w-[32rem] overflow-hidden rounded-2xl bg-[#272729] shadow-2xl ring-1 ring-white/10">
+          <div className="relative h-10 w-full">
+            <div className="absolute inset-x-0 mx-auto h-4 w-[80%] bg-[#050505] rounded-b-xl" />
+          </div>
+          <div className="relative flex">
+            <div className="mx-auto h-full w-[10%] overflow-hidden">
+              <SpeakerGrid />
+            </div>
+            <div className="mx-auto h-full w-[80%]">
+              <Keypad />
+            </div>
+            <div className="mx-auto h-full w-[10%] overflow-hidden">
+              <SpeakerGrid />
+            </div>
+          </div>
+          <Trackpad />
+          <div className="absolute inset-x-0 bottom-0 mx-auto h-2 w-24 rounded-t-xl bg-gradient-to-t from-[#272729] to-[#050505]" />
+          
+          {showGradient && (
+            <div className="absolute inset-x-0 bottom-0 z-50 h-32 w-full bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+          )}
+          
+          {badge && <div className="absolute bottom-6 left-6 z-50">{badge}</div>}
         </div>
-        <div className="relative flex">
-          <div className="mx-auto h-full w-[10%] overflow-hidden">
-            <SpeakerGrid />
-          </div>
-          <div className="mx-auto h-full w-[80%]">
-            <Keypad />
-          </div>
-          <div className="mx-auto h-full w-[10%] overflow-hidden">
-            <SpeakerGrid />
-          </div>
-        </div>
-        <Trackpad />
-        <div className="absolute inset-x-0 bottom-0 mx-auto h-2 w-20 rounded-tl-3xl rounded-tr-3xl bg-gradient-to-t from-[#272729] to-[#050505]" />
-        {showGradient && (
-          <div className="absolute inset-x-0 bottom-0 z-50 h-40 w-full bg-gradient-to-t from-transparent via-black to-black"></div>
-        )}
-        {badge && <div className="absolute bottom-4 left-4">{badge}</div>}
       </div>
     </div>
   );
@@ -147,26 +144,20 @@ export const Lid = ({
   src?: string;
 }) => {
   return (
-    <div className="relative [perspective:1000px]">
+    <div className="relative [perspective:1200px]">
       <div
         style={{
-          transform: "perspective(1000px) rotateX(-25deg) translateZ(0px)",
+          transform: "perspective(1200px) rotateX(-25deg) translateZ(0px)",
           transformOrigin: "bottom",
           transformStyle: "preserve-3d",
         }}
         className="relative h-[12rem] w-[32rem] rounded-2xl bg-[#010101] p-2"
       >
-        <div
-          style={{
-            boxShadow: "0px 2px 0px 2px #171717 inset",
-          }}
-          className="absolute inset-0 flex items-center justify-center rounded-lg bg-[#010101]"
-        >
-          <span className="text-white">
-            <AceternityLogo />
-          </span>
+        <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-[#010101] ring-1 ring-white/5">
+          <AceternityLogo />
         </div>
       </div>
+
       <motion.div
         style={{
           scaleX: scaleX,
@@ -176,210 +167,55 @@ export const Lid = ({
           transformStyle: "preserve-3d",
           transformOrigin: "top",
         }}
-        className="absolute inset-0 h-96 w-[32rem] rounded-2xl bg-[#010101] p-2 z-20"
+        className="absolute inset-0 h-96 w-[32rem] rounded-2xl bg-[#010101] p-2 z-20 shadow-2xl"
       >
-        <div className="absolute inset-0 rounded-lg bg-[#272729]" />
+        <div className="absolute inset-0 rounded-lg bg-[#171717] ring-1 ring-white/10" />
         <img
-          src={src as string}
-          alt="macbook screen"
-          className="absolute inset-0 h-full w-full rounded-lg object-cover object-left-top"
+          src={src}
+          alt="screen"
+          className="absolute inset-0 h-full w-full rounded-lg object-cover"
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20 rounded-lg" />
       </motion.div>
     </div>
   );
 };
 
-export const Trackpad = () => {
-  return (
-    <div
-      className="mx-auto my-1 h-32 w-[40%] rounded-xl"
-      style={{
-        boxShadow: "0px 0px 1px 1px #00000020 inset",
-      }}
-    ></div>
-  );
-};
+export const Trackpad = () => (
+  <div className="mx-auto my-2 h-32 w-[45%] rounded-2xl bg-black/20 ring-1 ring-white/5 shadow-inner" />
+);
+
+// Changed to React.FC to properly support the 'key' prop when mapped in Keypad component
+export const KBtn: React.FC<{ className?: string }> = ({ className }) => (
+  <div className={cn("h-5 w-5 rounded-[4px] bg-[#0A090D] ring-1 ring-white/10 shadow-sm", className)} />
+);
 
 export const Keypad = () => {
+  const rows = [1, 2, 3, 4, 5];
   return (
-    <div className="mx-1 h-full [transform:translateZ(0)] rounded-md bg-[#050505] p-1 [will-change:transform]">
-      {/* First Row */}
-      <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
-        <KBtn className="w-10 items-end justify-start pb-[2px] pl-[4px]" childrenClassName="items-start">esc</KBtn>
-        <KBtn><IconBrightnessDown className="h-[6px] w-[6px]" /><span className="mt-1 inline-block">F1</span></KBtn>
-        <KBtn><IconBrightnessUp className="h-[6px] w-[6px]" /><span className="mt-1 inline-block">F2</span></KBtn>
-        <KBtn><IconTable className="h-[6px] w-[6px]" /><span className="mt-1 inline-block">F3</span></KBtn>
-        <KBtn><IconSearch className="h-[6px] w-[6px]" /><span className="mt-1 inline-block">F4</span></KBtn>
-        <KBtn><IconMicrophone className="h-[6px] w-[6px]" /><span className="mt-1 inline-block">F5</span></KBtn>
-        <KBtn><IconMoon className="h-[6px] w-[6px]" /><span className="mt-1 inline-block">F6</span></KBtn>
-        <KBtn><IconPlayerTrackPrev className="h-[6px] w-[6px]" /><span className="mt-1 inline-block">F7</span></KBtn>
-        <KBtn><IconPlayerSkipForward className="h-[6px] w-[6px]" /><span className="mt-1 inline-block">F8</span></KBtn>
-        <KBtn><IconPlayerTrackNext className="h-[6px] w-[6px]" /><span className="mt-1 inline-block">F9</span></KBtn>
-        <KBtn><IconVolume3 className="h-[6px] w-[6px]" /><span className="mt-1 inline-block">F10</span></KBtn>
-        <KBtn><IconVolume2 className="h-[6px] w-[6px]" /><span className="mt-1 inline-block">F11</span></KBtn>
-        <KBtn><IconVolume className="h-[6px] w-[6px]" /><span className="mt-1 inline-block">F12</span></KBtn>
-        <KBtn>
-          <div className="h-4 w-4 rounded-full bg-gradient-to-b from-neutral-900 from-20% via-black via-50% to-neutral-900 to-95% p-px">
-            <div className="h-full w-full rounded-full bg-black" />
-          </div>
-        </KBtn>
-      </div>
-
-      <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
-        <KBtn><span className="block">~</span><span className="mt-1 block">`</span></KBtn>
-        <KBtn><span className="block">!</span><span className="block">1</span></KBtn>
-        <KBtn><span className="block">@</span><span className="block">2</span></KBtn>
-        <KBtn><span className="block">#</span><span className="block">3</span></KBtn>
-        <KBtn><span className="block">$</span><span className="block">4</span></KBtn>
-        <KBtn><span className="block">%</span><span className="block">5</span></KBtn>
-        <KBtn><span className="block">^</span><span className="block">6</span></KBtn>
-        <KBtn><span className="block">&</span><span className="block">7</span></KBtn>
-        <KBtn><span className="block">*</span><span className="block">8</span></KBtn>
-        <KBtn><span className="block">(</span><span className="block">9</span></KBtn>
-        <KBtn><span className="block">)</span><span className="block">0</span></KBtn>
-        <KBtn><span className="block">&mdash;</span><span className="block">_</span></KBtn>
-        <KBtn><span className="block">+</span><span className="block"> = </span></KBtn>
-        <KBtn className="w-10 items-end justify-end pr-[4px] pb-[2px]" childrenClassName="items-end">delete</KBtn>
-      </div>
-
-      <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
-        <KBtn className="w-10 items-end justify-start pb-[2px] pl-[4px]" childrenClassName="items-start">tab</KBtn>
-        <KBtn><span className="block">Q</span></KBtn>
-        <KBtn><span className="block">W</span></KBtn>
-        <KBtn><span className="block">E</span></KBtn>
-        <KBtn><span className="block">R</span></KBtn>
-        <KBtn><span className="block">T</span></KBtn>
-        <KBtn><span className="block">Y</span></KBtn>
-        <KBtn><span className="block">U</span></KBtn>
-        <KBtn><span className="block">I</span></KBtn>
-        <KBtn><span className="block">O</span></KBtn>
-        <KBtn><span className="block">P</span></KBtn>
-        <KBtn><span className="block">{`{`}</span><span className="block">{`[`}</span></KBtn>
-        <KBtn><span className="block">{`}`}</span><span className="block">{`]`}</span></KBtn>
-        <KBtn><span className="block">{`|`}</span><span className="block">{`\\`}</span></KBtn>
-      </div>
-
-      <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
-        <KBtn className="w-[2.8rem] items-end justify-start pb-[2px] pl-[4px]" childrenClassName="items-start">caps lock</KBtn>
-        <KBtn><span className="block">A</span></KBtn>
-        <KBtn><span className="block">S</span></KBtn>
-        <KBtn><span className="block">D</span></KBtn>
-        <KBtn><span className="block">F</span></KBtn>
-        <KBtn><span className="block">G</span></KBtn>
-        <KBtn><span className="block">H</span></KBtn>
-        <KBtn><span className="block">J</span></KBtn>
-        <KBtn><span className="block">K</span></KBtn>
-        <KBtn><span className="block">L</span></KBtn>
-        <KBtn><span className="block">{`:`}</span><span className="block">{`;`}</span></KBtn>
-        <KBtn><span className="block">{`"`}</span><span className="block">{`'`}</span></KBtn>
-        <KBtn className="w-[2.85rem] items-end justify-end pr-[4px] pb-[2px]" childrenClassName="items-end">return</KBtn>
-      </div>
-
-      <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
-        <KBtn className="w-[3.65rem] items-end justify-start pb-[2px] pl-[4px]" childrenClassName="items-start">shift</KBtn>
-        <KBtn><span className="block">Z</span></KBtn>
-        <KBtn><span className="block">X</span></KBtn>
-        <KBtn><span className="block">C</span></KBtn>
-        <KBtn><span className="block">V</span></KBtn>
-        <KBtn><span className="block">B</span></KBtn>
-        <KBtn><span className="block">N</span></KBtn>
-        <KBtn><span className="block">M</span></KBtn>
-        <KBtn><span className="block">{`<`}</span><span className="block">{`,`}</span></KBtn>
-        <KBtn><span className="block">{`>`}</span><span className="block">{`.`}</span></KBtn>
-        <KBtn><span className="block">{`?`}</span><span className="block">{`/`}</span></KBtn>
-        <KBtn className="w-[3.65rem] items-end justify-end pr-[4px] pb-[2px]" childrenClassName="items-end">shift</KBtn>
-      </div>
-
-      <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
-        <KBtn childrenClassName="h-full justify-between py-[4px]"><div className="flex w-full justify-end pr-1"><span>fn</span></div><div className="flex w-full justify-start pl-1"><IconWorld className="h-[6px] w-[6px]" /></div></KBtn>
-        <KBtn childrenClassName="h-full justify-between py-[4px]"><div className="flex w-full justify-end pr-1"><IconChevronUp className="h-[6px] w-[6px]" /></div><div className="flex w-full justify-start pl-1"><span>control</span></div></KBtn>
-        <KBtn childrenClassName="h-full justify-between py-[4px]"><div className="flex w-full justify-end pr-1"><OptionKey className="h-[6px] w-[6px]" /></div><div className="flex w-full justify-start pl-1"><span>option</span></div></KBtn>
-        <KBtn className="w-8" childrenClassName="h-full justify-between py-[4px]"><div className="flex w-full justify-end pr-1"><IconCommand className="h-[6px] w-[6px]" /></div><div className="flex w-full justify-start pl-1"><span>command</span></div></KBtn>
-        <KBtn className="w-[8.2rem]"></KBtn>
-        <KBtn className="w-8" childrenClassName="h-full justify-between py-[4px]"><div className="flex w-full justify-start pl-1"><IconCommand className="h-[6px] w-[6px]" /></div><div className="flex w-full justify-start pl-1"><span>command</span></div></KBtn>
-        <KBtn childrenClassName="h-full justify-between py-[4px]"><div className="flex w-full justify-start pl-1"><OptionKey className="h-[6px] w-[6px]" /></div><div className="flex w-full justify-start pl-1"><span>option</span></div></KBtn>
-        <div className="mt-[2px] flex h-6 w-[4.9rem] flex-col items-center justify-end rounded-[4px] p-[0.5px]">
-          <KBtn className="h-3 w-6"><IconCaretUpFilled className="h-[6px] w-[6px]" /></KBtn>
-          <div className="flex">
-            <KBtn className="h-3 w-6"><IconCaretLeftFilled className="h-[6px] w-[6px]" /></KBtn>
-            <KBtn className="h-3 w-6"><IconCaretDownFilled className="h-[6px] w-[6px]" /></KBtn>
-            <KBtn className="h-3 w-6"><IconCaretRightFilled className="h-[6px] w-[6px]" /></KBtn>
-          </div>
+    <div className="mx-1 h-full rounded-md bg-[#050505] p-2 flex flex-col gap-1">
+      {rows.map((row) => (
+        <div key={`row-${row}`} className="flex w-full gap-1">
+          {Array.from({ length: row === 1 ? 14 : row === 5 ? 12 : 13 }).map((_, i) => (
+            <KBtn 
+              key={`key-${row}-${i}`} 
+              className={cn(row === 1 && i === 0 && "w-10", (row === 2 && i === 13) && "w-10")} 
+            />
+          ))}
         </div>
-      </div>
+      ))}
     </div>
   );
 };
 
-export const KBtn = ({
-  className,
-  children,
-  childrenClassName,
-  backlit = true,
-}: {
-  className?: string;
-  children?: React.ReactNode;
-  childrenClassName?: string;
-  backlit?: boolean;
-}) => {
-  return (
-    <div
-      className={cn(
-        "[transform:translateZ(0)] rounded-[4px] p-[0.5px] [will-change:transform]",
-        backlit && "bg-white/[0.2] shadow-xl shadow-white",
-      )}
-    >
-      <div
-        className={cn(
-          "flex h-6 w-6 items-center justify-center rounded-[3.5px] bg-[#0A090D]",
-          className,
-        )}
-        style={{
-          boxShadow: "0px -0.5px 2px 0 #0D0D0F inset, -0.5px 0px 2px 0 #0D0D0F inset",
-        }}
-      >
-        <div
-          className={cn(
-            "flex w-full flex-col items-center justify-center text-[5px] text-neutral-200",
-            childrenClassName,
-            backlit && "text-white",
-          )}
-        >
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-};
+export const SpeakerGrid = () => (
+  <div className="mt-4 flex h-40 w-full opacity-20" style={{ backgroundImage: "radial-gradient(circle, #fff 0.5px, transparent 0.5px)", backgroundSize: "4px 4px" }} />
+);
 
-export const SpeakerGrid = () => {
-  return (
-    <div
-      className="mt-2 flex h-40 gap-[2px] px-[0.5px]"
-      style={{
-        backgroundImage: "radial-gradient(circle, #08080A 0.5px, transparent 0.5px)",
-        backgroundSize: "3px 3px",
-      }}
-    ></div>
-  );
-};
-
-export const OptionKey = ({ className }: { className: string }) => {
-  return (
-    <svg fill="none" version="1.1" id="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className={className}>
-      <rect stroke="currentColor" strokeWidth={2} x="18" y="5" width="10" height="2" />
-      <polygon stroke="currentColor" strokeWidth={2} points="10.6,5 4,5 4,7 9.4,7 18.4,27 28,27 28,25 19.6,25 " />
-      <rect id="_Transparent_Rectangle_" width="32" height="32" stroke="none" />
-    </svg>
-  );
-};
-
-const AceternityLogo = () => {
-  return (
-    <svg width="66" height="65" viewBox="0 0 66 65" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white">
-      <path d="M8 8.05571C8 8.05571 54.9009 18.1782 57.8687 30.062C60.8365 41.9458 9.05432 57.4696 9.05432 57.4696" stroke="currentColor" strokeWidth="15" strokeMiterlimit="3.86874" strokeLinecap="round" />
-    </svg>
-  );
-};
+const AceternityLogo = () => (
+  <svg width="40" height="40" viewBox="0 0 66 65" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-white opacity-20">
+    <path d="M8 8.05571C8 8.05571 54.9009 18.1782 57.8687 30.062C60.8365 41.9458 9.05432 57.4696 9.05432 57.4696" stroke="currentColor" strokeWidth="8" strokeLinecap="round" />
+  </svg>
+);
 
 export default MacbookShowcase;
