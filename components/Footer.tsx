@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowUpRight, Github, Twitter, Linkedin, Instagram } from 'lucide-react';
@@ -91,7 +90,7 @@ const Footer: React.FC = () => {
           </div>
           <div className="text-right">
             <p className="text-xs text-gray-500 uppercase tracking-widest font-bold">© 2024 All Rights Reserved</p>
-            <p className="text-xs text-gray-500 uppercase tracking-widest font-bold mt-2">Designed for the future</p>
+            <p className="text-xs text-gray-500 uppercase tracking-widest font-bold mt-2 hover:text-[#ff006e] transition-colors cursor-default">Created by Kayky Ribeiro | Kayzz</p>
           </div>
         </div>
       </div>

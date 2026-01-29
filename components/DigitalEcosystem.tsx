@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 
@@ -83,60 +82,77 @@ const GridLineVertical = ({ className, offset }: { className?: string; offset?: 
 );
 
 export const DigitalEcosystem: React.FC = () => {
-  const chunkSize = Math.ceil(images.length / 4);
-  const chunks = Array.from({ length: 4 }, (_, colIndex) => {
+  // 1. Massive vertical duplication to ensure top/bottom coverage during rotation
+  const extendedImages = [...images, ...images, ...images, ...images, ...images, ...images];
+  
+  // 2. Increase to 7 COLUMNS.
+  // The outer columns (1, 2, 6, 7) act as "fillers" for the corners of the screen.
+  // The middle columns (3, 4, 5) are the visual center.
+  const numCols = 7;
+  const chunkSize = Math.ceil(extendedImages.length / numCols);
+  const chunks = Array.from({ length: numCols }, (_, colIndex) => {
     const start = colIndex * chunkSize;
-    return images.slice(start, start + chunkSize);
+    return extendedImages.slice(start, start + chunkSize);
   });
 
   return (
-    <section className="relative min-h-screen bg-[#0a0a0a] overflow-hidden py-40 flex flex-col justify-center items-center">
+    // Changed h-[140vh] to h-screen to fit exactly one viewport as requested
+    <section className="relative h-screen bg-[#0a0a0a] overflow-hidden flex flex-col justify-center items-center">
       {/* Side Header */}
-      <div className="absolute left-10 md:left-20 top-20 z-40 max-w-sm pointer-events-none">
-        <h2 className="text-4xl md:text-6xl font-black text-white leading-none tracking-tighter uppercase italic">
-          VISUAL <br /> <span className="text-[#ff006e]">ARCHIVE</span>
+      <div className="absolute left-6 md:left-20 top-32 z-50 max-w-md pointer-events-none mix-blend-difference text-white">
+        <h2 className="text-5xl md:text-8xl font-black leading-none tracking-tighter uppercase italic drop-shadow-2xl">
+          VISUAL <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff006e] to-[#00f5ff]">ARCHIVE</span>
         </h2>
-        <div className="w-20 h-1 bg-[#00f5ff] mt-6" />
-        <p className="mt-8 text-xs font-bold text-gray-400 uppercase tracking-[0.3em] leading-relaxed">
+        <div className="w-32 h-2 bg-[#ff006e] mt-8 skew-x-12" />
+        <p className="mt-8 text-sm md:text-base font-bold text-gray-200 uppercase tracking-[0.3em] leading-relaxed drop-shadow-md bg-black/50 backdrop-blur-sm inline-block p-2 rounded">
           A modular ecosystem of immersive interfaces.
         </p>
       </div>
 
-      {/* Main Isometric Grid Area - Centered */}
-      <div className="relative w-full h-[700px] flex items-center justify-center">
-        <div className="relative size-[1400px] shrink-0 scale-[0.45] md:scale-[0.65] lg:scale-100 flex items-center justify-center transform-3d">
+      {/* Main Isometric Grid Area */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        {/* 
+            Container Strategy for "Corner Filling" + "Big Cards":
+            1. w-[3400px]: We massively increase width to accommodate 7 columns.
+               This ensures that even though we added columns, the individual cards stay BIG.
+            2. h-[2500px]: Sufficient height for the diagonal.
+            3. scale-[0.6] md:scale-[0.8]: Adjust scale slightly to fit the new massive width nicely.
+        */}
+        <div className="relative w-[3400px] h-[2500px] shrink-0 scale-[0.5] md:scale-[0.8] flex items-center justify-center transform-3d">
           <div
             style={{
-              transform: "rotateX(55deg) rotateY(0deg) rotateZ(-45deg)",
+              transform: "rotateX(50deg) rotateY(0deg) rotateZ(-45deg)",
             }}
-            className="relative grid grid-cols-4 gap-12 transform-3d"
+            className="relative grid grid-cols-7 gap-8 transform-3d"
           >
             {chunks.map((subarray, colIndex) => (
               <motion.div
-                animate={{ y: colIndex % 2 === 0 ? 60 : -60 }}
+                animate={{ y: colIndex % 2 === 0 ? 80 : -80 }}
                 transition={{
-                  duration: colIndex % 2 === 0 ? 15 : 20,
+                  duration: colIndex % 2 === 0 ? 30 : 40, // Slower, smoother float
                   repeat: Infinity,
                   repeatType: "reverse",
                   ease: "easeInOut"
                 }}
                 key={colIndex}
-                className="flex flex-col items-start gap-12"
+                className="flex flex-col items-center gap-8"
               >
-                <GridLineVertical className="-left-6" offset="100px" />
+                <GridLineVertical className="-left-4" offset="120px" />
                 {subarray.map((image, imageIndex) => (
                   <div className="relative" key={imageIndex}>
-                    <GridLineHorizontal className="-top-6" offset="30px" />
+                    <GridLineHorizontal className="-top-4" offset="40px" />
                     <motion.div
-                      whileHover={{ z: 40, scale: 1.05 }}
-                      transition={{ duration: 0.3 }}
-                      className="relative z-10 group"
+                      whileHover={{ z: 20, scale: 1.05 }}
+                      className="relative z-10 group rounded-xl overflow-hidden bg-[#111]"
                     >
+                      <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors z-20" />
                       <img
                         src={image}
-                        alt="tech"
-                        className="aspect-[970/700] w-[320px] rounded-xl object-cover ring-1 ring-white/10 group-hover:ring-[#ff006e]/50 shadow-2xl transition-all"
+                        alt="archive-item"
+                        className="aspect-[16/10] w-[400px] object-cover opacity-60 group-hover:opacity-100 transition-all duration-500 saturate-0 group-hover:saturate-100"
+                        loading="lazy"
                       />
+                      <div className="absolute inset-0 ring-1 ring-white/10 group-hover:ring-[#ff006e] transition-all duration-500 z-30 pointer-events-none" />
                     </motion.div>
                   </div>
                 ))}
@@ -145,6 +161,9 @@ export const DigitalEcosystem: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      {/* Heavy Vignette to seamlessly blend the edges if they do appear */}
+      <div className="absolute inset-0 pointer-events-none z-40 bg-[radial-gradient(circle_at_center,transparent_30%,#0a0a0a_95%)]" />
     </section>
   );
 };
